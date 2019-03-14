@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/ZombieChase/precache-manifest.d061f11524e5b82a2772ac6d780fb96d.js"
+  "/ZombieChase/precache-manifest.60aca4a92825d0a225ff2f8aa31fdb3e.js"
 );
 
 workbox.clientsClaim();
