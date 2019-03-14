@@ -59,92 +59,333 @@ const App = props => {
       spikeChase();
     }
   };
+  const shootHelper = direction => {
+    if (props.heldWeapon === "pistol") {
+      shootPistol(direction, x, y);
+    }
+    if (props.heldWeapon === "shotgun") {
+      shootShotgun(direction, x, y, true, true, true, props.spikes);
+    }
+    if (props.heldWeapon === "sniper") {
+      shootSniper(direction, x, y, props.spikes);
+    }
+  };
+
+  const shootPistol = (dir, ix, iy) => {
+    setTimeout(() => {
+      if (dir === "up") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          removeSpike(ix, iy);
+          removeBullet(ix, iy + 1);
+        } else {
+          removeBullet(ix, iy + 1);
+          props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+
+          if (iy >= 0) {
+            shootPistol("up", ix, iy - 1);
+          }
+        }
+      } else if (dir === "down") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          removeSpike(ix, iy);
+          removeBullet(ix, iy - 1);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+          if (iy <= 20) {
+            shootPistol("down", ix, iy + 1);
+          }
+        }
+      } else if (dir === "left") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          removeSpike(ix, iy);
+          removeBullet(ix + 1, iy);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+          if (ix >= 0) {
+            shootPistol("left", ix - 1, iy);
+          }
+        }
+      } else if (dir === "right") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          removeSpike(ix, iy);
+          removeBullet(ix - 1, iy);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+
+          if (ix <= 20) {
+            shootPistol("right", ix + 1, iy);
+          }
+        }
+      }
+    }, 30);
+  };
+
+  const shootShotgun = (dir, ix, iy, a, b, c, spikeInput) => {
+    setTimeout(() => {
+      if (dir === "up") {
+        let allSpikes = spikeInput;
+        let bullets = props.bullet;
+        bullets = bullets.filter(bul => {
+          return !(
+            (bul.x == ix - 1 || bul.x == ix || bul.x == ix + 1) &&
+            bul.y == iy + 1
+          );
+        });
+        if (a) {
+          if (props.spikes.some(spike => spike.x == ix - 1 && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix - 1 && s.y == iy);
+            });
+            a = false;
+          } else {
+            bullets.push({ x: ix - 1, y: iy });
+          }
+        }
+        if (b) {
+          if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy);
+            });
+            b = false;
+          } else {
+            bullets.push({ x: ix, y: iy });
+          }
+        }
+        if (c) {
+          if (props.spikes.some(spike => spike.x == ix + 1 && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix + 1 && s.y == iy);
+            });
+            c = false;
+          } else {
+            bullets.push({ x: ix + 1, y: iy });
+          }
+        }
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        props.dispatch({ type: "change_bullet", data: bullets });
+
+        if (iy >= 0) {
+          shootShotgun("up", ix, iy - 1, a, b, c, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "down") {
+        let allSpikes = spikeInput;
+        let bullets = props.bullet;
+        bullets = bullets.filter(bul => {
+          return !(
+            (bul.x == ix - 1 || bul.x == ix || bul.x == ix + 1) &&
+            bul.y == iy - 1
+          );
+        });
+        if (a) {
+          if (props.spikes.some(spike => spike.x == ix - 1 && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix - 1 && s.y == iy);
+            });
+            a = false;
+          } else {
+            bullets.push({ x: ix - 1, y: iy });
+          }
+        }
+        if (b) {
+          if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy);
+            });
+            b = false;
+          } else {
+            bullets.push({ x: ix, y: iy });
+          }
+        }
+        if (c) {
+          if (props.spikes.some(spike => spike.x == ix + 1 && spike.y == iy)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix + 1 && s.y == iy);
+            });
+            c = false;
+          } else {
+            bullets.push({ x: ix + 1, y: iy });
+          }
+        }
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        props.dispatch({ type: "change_bullet", data: bullets });
+
+        if (iy <= 20) {
+          shootShotgun("down", ix, iy + 1, a, b, c, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "left") {
+        let allSpikes = spikeInput;
+        let bullets = props.bullet;
+        bullets = bullets.filter(bul => {
+          return !(
+            (bul.y == iy - 1 || bul.y == iy || bul.y == iy + 1) &&
+            bul.x == ix + 1
+          );
+        });
+        if (a) {
+          if (props.spikes.some(spike => spike.y == iy - 1 && spike.x == ix)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.y == iy - 1 && s.x == ix);
+            });
+            a = false;
+          } else {
+            bullets.push({ x: ix, y: iy - 1 });
+          }
+        }
+        if (b) {
+          if (props.spikes.some(spike => spike.y == iy && spike.x == ix)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy);
+            });
+            b = false;
+          } else {
+            bullets.push({ x: ix, y: iy });
+          }
+        }
+        if (c) {
+          if (props.spikes.some(spike => spike.x == ix && spike.y == iy + 1)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy + 1);
+            });
+            c = false;
+          } else {
+            bullets.push({ x: ix, y: iy + 1 });
+          }
+        }
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        props.dispatch({ type: "change_bullet", data: bullets });
+
+        if (ix >= 0) {
+          shootShotgun("left", ix - 1, iy, a, b, c, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "right") {
+        let allSpikes = spikeInput;
+        let bullets = props.bullet;
+        bullets = bullets.filter(bul => {
+          return !(
+            (bul.y == iy - 1 || bul.y == iy || bul.y == iy + 1) &&
+            bul.x == ix - 1
+          );
+        });
+        if (a) {
+          if (props.spikes.some(spike => spike.y == iy - 1 && spike.x == ix)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.y == iy - 1 && s.x == ix);
+            });
+            a = false;
+          } else {
+            bullets.push({ x: ix, y: iy - 1 });
+          }
+        }
+        if (b) {
+          if (props.spikes.some(spike => spike.y == iy && spike.x == ix)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy);
+            });
+            b = false;
+          } else {
+            bullets.push({ x: ix, y: iy });
+          }
+        }
+        if (c) {
+          if (props.spikes.some(spike => spike.x == ix && spike.y == iy + 1)) {
+            allSpikes = allSpikes.filter(s => {
+              return !(s.x == ix && s.y == iy + 1);
+            });
+            c = false;
+          } else {
+            bullets.push({ x: ix, y: iy + 1 });
+          }
+        }
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        props.dispatch({ type: "change_bullet", data: bullets });
+
+        if (ix <= 20) {
+          shootShotgun("right", ix + 1, iy, a, b, c, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      }
+    }, 30);
+  };
+
+  const shootSniper = (dir, ix, iy, spikesInput) => {
+    setTimeout(() => {
+      let allSpikes = spikesInput;
+      if (dir === "up") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          allSpikes = allSpikes.filter(s => {
+            return !(s.x == ix && s.y == iy);
+          });
+        }
+        props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        if (iy >= 0) {
+          shootSniper("up", ix, iy - 1, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "down") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          allSpikes = allSpikes.filter(s => {
+            return !(s.x == ix && s.y == iy);
+          });
+        }
+        props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        if (iy <= 20) {
+          shootSniper("down", ix, iy + 1, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "left") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          allSpikes = allSpikes.filter(s => {
+            return !(s.x == ix && s.y == iy);
+          });
+        }
+        props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        if (ix >= 0) {
+          shootSniper("left", ix - 1, iy, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      } else if (dir === "right") {
+        if (props.spikes.some(spike => spike.x == ix && spike.y == iy)) {
+          allSpikes = allSpikes.filter(s => {
+            return !(s.x == ix && s.y == iy);
+          });
+        }
+        props.dispatch({ type: "change_bullet", data: [{ x: ix, y: iy }] });
+        props.dispatch({ type: "change_spikes", data: allSpikes });
+        if (ix <= 20) {
+          shootSniper("right", ix + 1, iy, allSpikes);
+        } else {
+          props.dispatch({ type: "change_bullet", data: [] });
+        }
+      }
+    }, 30);
+  };
 
   const shoot = direction => {
     addEnemy();
-
-    function theLoop(dir, i) {
-      setTimeout(() => {
-        if (dir === "up") {
-          if (props.spikes.some(spike => spike.x == x && spike.y == i)) {
-            removeSpike(x, i);
-            props.dispatch({ type: "change_bullet", data: [] });
-          } else {
-            props.dispatch({ type: "change_bullet", data: [{ x: x, y: i }] });
-            if (i >= 0) {
-              theLoop("up", i - 1);
-            }
-          }
-        } else if (dir === "down") {
-          if (props.spikes.some(spike => spike.x == x && spike.y == i)) {
-            removeSpike(x, i);
-            props.dispatch({ type: "change_bullet", data: [] });
-          } else {
-            props.dispatch({ type: "change_bullet", data: [{ x: x, y: i }] });
-            if (i <= 20) {
-              theLoop("down", i + 1);
-            }
-          }
-        } else if (dir === "left") {
-          if (props.spikes.some(spike => spike.x == i && spike.y == y)) {
-            removeSpike(i, y);
-            props.dispatch({ type: "change_bullet", data: [] });
-          } else {
-            props.dispatch({ type: "change_bullet", data: [{ x: i, y: y }] });
-            if (i >= 0) {
-              theLoop("left", i - 1);
-            }
-          }
-        } else if (dir === "right") {
-          if (props.spikes.some(spike => spike.x == i && spike.y == y)) {
-            removeSpike(i, y);
-            props.dispatch({ type: "change_bullet", data: [] });
-          } else {
-            props.dispatch({ type: "change_bullet", data: [{ x: i, y: y }] });
-
-            if (i <= 20) {
-              theLoop("right", i + 1);
-            }
-          }
-        }
-      }, 30);
-    }
-
     if (direction == "up") {
-      theLoop("up", y);
-      // for (let i = y; i >= 0; i--) {
-      //   if (props.spikes.some(spike => spike.x == x && spike.y == i)) {
-      //     removeSpike(x, i);
-      //     break;
-      //   }
-      // }
+      shootHelper("up");
     }
     if (direction == "down") {
-      theLoop("down", y);
-      // for (let i = y; i <= 20; i++) {
-      //   if (props.spikes.some(spike => spike.x == x && spike.y == i)) {
-      //     removeSpike(x, i);
-      //     break;
-      //   }
-      // }
+      shootHelper("down");
     }
     if (direction == "left") {
-      theLoop("left", x);
-      // for (let i = y; i >= 0; i--) {
-      //   if (props.spikes.some(spike => spike.x == i && spike.y == y)) {
-      //     removeSpike(i, y);
-      //     break;
-      //   }
-      // }
+      shootHelper("left");
     }
     if (direction == "right") {
-      theLoop("right", x);
-      // for (let i = y; i <= 20; i++) {
-      //   if (props.spikes.some(spike => spike.x == i && spike.y == y)) {
-      //     removeSpike(i, y);
-      //     break;
-      //   }
-      // }
+      shootHelper("right");
     }
   };
 
@@ -157,6 +398,17 @@ const App = props => {
       data: newSpikes
     });
   };
+
+  const removeBullet = (bx, by) => {
+    const newBullets = props.bullet.filter(bul => {
+      return !(bul.x == bx && bul.y == by);
+    });
+    props.dispatch({
+      type: "change_bullet",
+      data: newBullets
+    });
+  };
+
   const spikeChase = () => {
     const spikeArray = props.spikes.map(spike => {
       let num = utils.getRandomInt(10);
@@ -187,7 +439,11 @@ const App = props => {
     <div {...ArrowKeysReact.events} className="App bg-dark">
       <div className="container">
         <div className="row">
-          <div className="col-sm-2">
+          <div className="col-sm-9">
+            <br />
+            <GameBoard />
+          </div>
+          <div className="col-sm-3">
             <br />
             <br />
             <br />
@@ -209,10 +465,6 @@ const App = props => {
               addEnemy={addEnemy}
             />
           </div>
-          <div className="col-sm-10">
-            <br />
-            <GameBoard />
-          </div>
         </div>
       </div>
     </div>
@@ -222,6 +474,8 @@ const App = props => {
 export default connect(function mapStateToProps(state, props) {
   return {
     player: state.player,
-    spikes: state.spikes
+    spikes: state.spikes,
+    heldWeapon: state.heldWeapon,
+    bullet: state.bullet
   };
 })(App);

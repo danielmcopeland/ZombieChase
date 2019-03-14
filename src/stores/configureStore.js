@@ -9,9 +9,15 @@ const defaultState = {
     health: 50,
     healthPacks: 0
   },
+  equipedWeapons: ["pistol"],
+  heldWeapon: "pistol",
   healthPacks: [{ x: 2, y: 3 }, { x: 6, y: 10 }, { x: 3, y: 7 }],
   spikes: [{ x: 8, y: 14 }, { x: 14, y: 8 }, { x: 16, y: 3 }, { x: 1, y: 18 }],
-  bullet: []
+  bullet: [],
+  weapons: {
+    shotgun: [{ x: 4, y: 1 }],
+    sniper: [{ x: 6, y: 2 }]
+  }
 };
 
 function move(state = defaultState, action) {
@@ -65,6 +71,29 @@ function move(state = defaultState, action) {
     return {
       ...state,
       bullet: action.data
+    };
+  } else if (action.type === "pickup_shotgun") {
+    return {
+      ...state,
+      equipedWeapons: [...state.equipedWeapons, "shotgun"],
+      weapons: {
+        shotgun: action.data,
+        sniper: state.weapons.sniper
+      }
+    };
+  } else if (action.type === "pickup_sniper") {
+    return {
+      ...state,
+      equipedWeapons: [...state.equipedWeapons, "sniper"],
+      weapons: {
+        shotgun: state.weapons.shotgun,
+        sniper: action.data
+      }
+    };
+  } else if (action.type === "change_equiped_weapon") {
+    return {
+      ...state,
+      heldWeapon: action.data
     };
   }
   return state;

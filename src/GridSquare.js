@@ -15,6 +15,12 @@ const GridSquare = props => {
   const isBulletOccupied = props.bullet.some(bul => {
     return bul.x == props.x && bul.y == props.y;
   });
+  const isShotgunOccupied = props.weapons.shotgun.some(gun => {
+    return gun.x == props.x && gun.y == props.y;
+  });
+  const isSniperOccupied = props.weapons.sniper.some(gun => {
+    return gun.x == props.x && gun.y == props.y;
+  });
 
   const getSquareColor = () => {
     if (isPlayerOccupied) {
@@ -31,6 +37,14 @@ const GridSquare = props => {
     }
     if (isBulletOccupied) {
       squareIcon = "0";
+      return "Gray";
+    }
+    if (isShotgunOccupied) {
+      squareIcon = "S";
+      return "Gray";
+    }
+    if (isSniperOccupied) {
+      squareIcon = "R";
       return "Gray";
     }
     return "Gray";
@@ -59,6 +73,18 @@ const GridSquare = props => {
         data: newHealthPacks
       });
     }
+    if (isPlayerOccupied && isShotgunOccupied) {
+      const newShotguns = props.weapons.shotgun.filter(gun => {
+        return !(gun.x == props.x && gun.y == props.y);
+      });
+      props.dispatch({ type: "pickup_shotgun", data: newShotguns });
+    }
+    if (isPlayerOccupied && isSniperOccupied) {
+      const newSnipers = props.weapons.sniper.filter(gun => {
+        return !(gun.x == props.x && gun.y == props.y);
+      });
+      props.dispatch({ type: "pickup_sniper", data: newSnipers });
+    }
     if (isPlayerOccupied && isSpikeOccupied) {
       const newSpikes = props.spikes.filter(pack => {
         return !(pack.x == props.x && pack.y == props.y);
@@ -72,6 +98,15 @@ const GridSquare = props => {
         data: newSpikes
       });
     }
+    // if (isBulletOccupied && isSpikeOccupied) {
+    //   const newSpikes = props.spikes.filter(pack => {
+    //     return !(pack.x == props.x && pack.y == props.y);
+    //   });
+    //   props.dispatch({
+    //     type: "change_spikes",
+    //     data: newSpikes
+    //   });
+    // }
     if (isPlayerOccupied) {
       return "Black";
     }
@@ -82,6 +117,9 @@ const GridSquare = props => {
       return "Black";
     }
     if (isBulletOccupied) {
+      return "White";
+    }
+    if (isSniperOccupied || isShotgunOccupied) {
       return "White";
     }
     return "Gray";
@@ -122,6 +160,7 @@ export default connect(function mapStateToProps(state, props) {
     player: state.player,
     healthPacks: state.healthPacks,
     spikes: state.spikes,
-    bullet: state.bullet
+    bullet: state.bullet,
+    weapons: state.weapons
   };
 })(GridSquare);

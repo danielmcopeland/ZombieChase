@@ -5,50 +5,14 @@ import { connect } from "react-redux";
 const Controls = props => {
   const { x, y } = props.player.location;
 
-  // ArrowKeysReact.config({
-  //   left: () => {
-  //     moveLeft();
-  //   },
-  //   right: () => {
-  //     moveRight();
-  //   },
-  //   up: () => {
-  //     moveUp();
-  //   },
-  //   down: () => {
-  //     moveDown();
-  //   }
-  // });
-
-  // const moveUp = () => {
-  //   props.dispatch({
-  //     type: "change_player_location",
-  //     data: { x: x, y: y - 1 }
-  //   });
-  // };
-  // const moveDown = () => {
-  //   props.dispatch({
-  //     type: "change_player_location",
-  //     data: { x: x, y: y + 1 }
-  //   });
-  // };
-  // const moveLeft = () => {
-  //   props.dispatch({
-  //     type: "change_player_location",
-  //     data: { x: x - 1, y: y }
-  //   });
-  // };
-  // const moveRight = () => {
-  //   props.dispatch({
-  //     type: "change_player_location",
-  //     data: { x: x + 1, y: y }
-  //   });
-  // };
-
   const useHealthPack = () => {
     if (props.player.healthPacks > 0) {
       props.dispatch({ type: "use_health_pack" });
     }
+  };
+
+  const selectWeapon = weapon => {
+    props.dispatch({ type: "change_equiped_weapon", data: weapon });
   };
 
   return (
@@ -72,15 +36,26 @@ const Controls = props => {
             &#62;
           </button>
         </div>
+        <br />
         <div className="arrowKeyRow">
           <button className="use-health-pack" onClick={useHealthPack}>
             Use Health Pack
           </button>
         </div>
-        <div className="arrowKeyRow">
-          <button className="add-enemy" onClick={props.addEnemy}>
-            Add Enemy
-          </button>
+        <br />
+        <div className="inventory">
+          <div style={{ color: "white" }}>
+            Equiped Weapon: {props.heldWeapon}
+          </div>
+        </div>
+        <div className="inventory">
+          <div style={{ color: "white" }}>Inventory</div>
+          {props.equipedWeapons.map((weapon, index) => (
+            <div key={index} className="inventory_button">
+              <button onClick={() => selectWeapon(weapon)}>{weapon}</button>
+              <br />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -89,6 +64,8 @@ const Controls = props => {
 
 export default connect(function mapStateToProps(state, props) {
   return {
-    player: state.player
+    player: state.player,
+    equipedWeapons: state.equipedWeapons,
+    heldWeapon: state.heldWeapon
   };
 })(Controls);
