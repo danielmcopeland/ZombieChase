@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/ZombeChase/precache-manifest.1b048471ce8b5e1fcb4087626006bac7.js"
+  "/ZombieChase/precache-manifest.d061f11524e5b82a2772ac6d780fb96d.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/ZombeChase/index.html", {
+workbox.routing.registerNavigationRoute("/ZombieChase/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
