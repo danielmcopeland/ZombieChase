@@ -1,0 +1,83 @@
+$main: #555;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.inline {
+  display: inline;
+}
+
+.game-row {
+  margin: 0 auto;
+  position: relative;
+  max-height: 50px;
+}
+
+.playerInfo {
+  color: white;
+}
+
+.game {
+  border: thin solid #ddd;
+}
+
+.grid {
+  display: inline-block;
+  margin: 20px;
+}
+
+.body {
+  display: flex;
+}
+
+.help {
+  color: #666;
+  margin: 10px;
+  text-align: center;
+}
+
+.left {
+  text-align: center;
+  width: 50%;
+  border: thin solid #ddd;
+}
+
+.right {
+  text-align: center;
+  padding: 10px;
+  width: 50%;
+  border: thin solid #ddd;
+}
+
+.star {
+  display: inline-block;
+  margin: 0;
+  max-height: 40px;
+}
+
+.grid-button {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+// .star:after {
+//   content: "\2605";
+//   font-size: 45px;
+// }

@@ -1,0 +1,127 @@
+import React from "react";
+import { connect } from "react-redux";
+
+const GridSquare = props => {
+  const { x, y } = props.player.location;
+  let squareIcon = ".";
+  const isPlayerOccupied = x === props.x && y === props.y;
+  const isHealOccupied = props.healthPacks.some(pack => {
+    return pack.x == props.x && pack.y == props.y;
+  });
+  const isSpikeOccupied = props.spikes.some(spike => {
+    return spike.x == props.x && spike.y == props.y;
+  });
+
+  const isBulletOccupied = props.bullet.some(bul => {
+    return bul.x == props.x && bul.y == props.y;
+  });
+
+  const getSquareColor = () => {
+    if (isPlayerOccupied) {
+      squareIcon = "o";
+      return getPlayerHealthColor();
+    }
+    if (isHealOccupied) {
+      squareIcon = "+";
+      return "White";
+    }
+    if (isSpikeOccupied) {
+      squareIcon = "X";
+      return "Tan";
+    }
+    if (isBulletOccupied) {
+      squareIcon = "0";
+      return "Gray";
+    }
+    return "Gray";
+  };
+
+  const getTextColor = () => {
+    if (isHealOccupied && isSpikeOccupied) {
+      const newHealthPacks = props.healthPacks.filter(pack => {
+        return !(pack.x == props.x && pack.y == props.y);
+      });
+      props.dispatch({
+        type: "change_healthPacks",
+        data: newHealthPacks
+      });
+    }
+    if (isPlayerOccupied && isHealOccupied) {
+      const newHealthPacks = props.healthPacks.filter(pack => {
+        return !(pack.x == props.x && pack.y == props.y);
+      });
+      props.dispatch({
+        type: "add_health_pack",
+        data: props.player.healthPacks + 1
+      });
+      props.dispatch({
+        type: "change_healthPacks",
+        data: newHealthPacks
+      });
+    }
+    if (isPlayerOccupied && isSpikeOccupied) {
+      const newSpikes = props.spikes.filter(pack => {
+        return !(pack.x == props.x && pack.y == props.y);
+      });
+      props.dispatch({
+        type: "change_player_health",
+        data: props.player.health - 25
+      });
+      props.dispatch({
+        type: "change_spikes",
+        data: newSpikes
+      });
+    }
+    if (isPlayerOccupied) {
+      return "Black";
+    }
+    if (isHealOccupied) {
+      return "Red";
+    }
+    if (isSpikeOccupied) {
+      return "Black";
+    }
+    if (isBulletOccupied) {
+      return "White";
+    }
+    return "Gray";
+  };
+
+  const getPlayerHealthColor = () => {
+    let color;
+    const health = props.player.health;
+    if (health > 75) {
+      color = "Green";
+    } else if (health > 50) {
+      color = "Yellow";
+    } else if (health > 25) {
+      color = "Orange";
+    } else {
+      color = "Red";
+    }
+    return color;
+  };
+
+  return (
+    <div className="inline">
+      <button
+        className="grid-button"
+        style={{
+          backgroundColor: getSquareColor(),
+          color: getTextColor()
+        }}
+      >
+        {squareIcon}
+      </button>
+    </div>
+  );
+};
+
+export default connect(function mapStateToProps(state, props) {
+  return {
+    player: state.player,
+    healthPacks: state.healthPacks,
+    spikes: state.spikes,
+    bullet: state.bullet
+  };
+})(GridSquare);
