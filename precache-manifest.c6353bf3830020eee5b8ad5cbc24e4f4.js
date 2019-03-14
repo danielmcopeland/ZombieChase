@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/ZombieChase/static/js/runtime~main.5738686c.js"
   },
   {
-    "revision": "847ca3d23a71739c5537",
-    "url": "/ZombieChase/static/js/main.180b93e3.chunk.js"
+    "revision": "232d16070b1c0f88246f",
+    "url": "/ZombieChase/static/js/main.bb29f006.chunk.js"
   },
   {
     "revision": "080ed37d2531e5c1d7a7",
     "url": "/ZombieChase/static/js/2.d8a64613.chunk.js"
   },
   {
-    "revision": "847ca3d23a71739c5537",
+    "revision": "232d16070b1c0f88246f",
     "url": "/ZombieChase/static/css/main.101fc59e.chunk.css"
   },
   {
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/ZombieChase/static/css/2.77dd946f.chunk.css"
   },
   {
-    "revision": "3379881e7a4de96190d27111575dff88",
+    "revision": "0c1eb3f6b30081c082033acc280dc30e",
     "url": "/ZombieChase/index.html"
   }
 ];
