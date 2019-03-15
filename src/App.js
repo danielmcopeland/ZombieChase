@@ -550,7 +550,10 @@ const App = props => {
               <div>Use arrow keys to shoot</div>
               <div>Select weapon from inventory using the number keys</div>
               <div>H to use a health pack</div>
-              <p>Beware, each shot will attract more zombies</p>
+              <p>
+                Beware, each shot will attract more zombies, and some guns are
+                louder than others
+              </p>
               <p>
                 Switch weapons by clicking the desired weapon in your inventory
               </p>
