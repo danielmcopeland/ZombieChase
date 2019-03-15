@@ -6,17 +6,17 @@ const defaultState = {
       x: 0,
       y: 0
     },
-    health: 50,
+    health: 100,
     healthPacks: 0
   },
   equipedWeapons: ["pistol"],
   heldWeapon: "pistol",
-  healthPacks: [{ x: 2, y: 3 }, { x: 6, y: 10 }, { x: 3, y: 7 }],
+  healthPacks: [{ x: 15, y: 4 }, { x: 5, y: 13 }, { x: 7, y: 2 }],
   spikes: [{ x: 8, y: 14 }, { x: 14, y: 8 }, { x: 16, y: 3 }, { x: 1, y: 18 }],
   bullet: [],
   weapons: {
-    shotgun: [{ x: 4, y: 1 }],
-    sniper: [{ x: 6, y: 2 }]
+    shotgun: [{ x: 18, y: 12 }],
+    sniper: [{ x: 2, y: 18 }]
   }
 };
 

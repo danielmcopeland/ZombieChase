@@ -9,6 +9,7 @@
     "node-sass": "^4.11.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-keyboard-event-handler": "^1.4.1",
     "react-redux": "^6.0.1",
     "react-scripts": "2.1.8",
     "reactstrap": "^7.1.0",
